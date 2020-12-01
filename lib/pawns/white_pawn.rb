@@ -1,6 +1,7 @@
 require_relative 'pawn'
 class WhitePawn < Pawn
-  attr_reader :symbol, :row, :column, :piece_color
+  attr_reader :symbol, :piece_color
+  attr_accessor :row, :column
   def initialize(row, column)
     @symbol = '  ♙  '
     @row = row
@@ -10,7 +11,7 @@ class WhitePawn < Pawn
 
   def move(array)
     @array = array
-    @legal_moves = []
+    @legal_moves = {}
     pawn_first_move
     capture_diagonally
   end
@@ -21,7 +22,7 @@ class WhitePawn < Pawn
     2.times do
       return if @array[add_row][@column].is_a?(Piece) || add_row.negative? || add_row > 8
 
-      @legal_moves << [add_row, @column]
+      @legal_moves[[add_row, @column]] = [add_row, @column]
       return unless @row == 1
 
       add_row = add_row2

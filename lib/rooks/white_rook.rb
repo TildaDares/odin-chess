@@ -1,6 +1,7 @@
 require_relative 'rook'
 class WhiteRook < Rook
-  attr_reader :symbol, :row, :column, :piece_color, :legal_moves
+  attr_reader :symbol, :piece_color, :legal_moves
+  attr_accessor :row, :column
   def initialize(row, column)
     @symbol = '  ♖  '
     @row = row
@@ -10,7 +11,7 @@ class WhiteRook < Rook
 
   def move(array)
     @array = array
-    @legal_moves = []
+    @legal_moves = {}
     front_row_checker
     back_row_checker
     right_column_checker

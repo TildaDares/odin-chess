@@ -1,5 +1,6 @@
 require 'colorize'
 require_relative 'piece'
+require_relative 'convert_chess_notations'
 require_relative 'bishops/white_bishop'
 require_relative 'bishops/black_bishop'
 require_relative 'kings/white_king'
@@ -12,7 +13,9 @@ require_relative 'knights/white_knight'
 require_relative 'knights/black_knight'
 require_relative 'rooks/white_rook'
 require_relative 'rooks/black_rook'
+require 'pry'
 class Board
+  include ConvertChessNotations
   attr_reader :array
   def initialize
     populate_array
@@ -51,7 +54,7 @@ class Board
     @array = array
   end
 
-  def color_board(row, column, chess_piece)
+  def color_board(row, column, chess_piece, _row_except, _col_except)
     if row.even?
       even_column_tiles(column, chess_piece)
     else
@@ -72,7 +75,7 @@ class Board
     if column.even?
       piece.on_light_black
     else
-      piece.on_white
+      piece.on_light_white
     end
   end
 
@@ -81,14 +84,55 @@ class Board
     if column.odd?
       piece.on_light_black
     else
-      piece.on_white
+      piece.on_light_white
     end
   end
+
+  def check_game_board_pieces?(piece_to_play, piece_color)
+    copied_array = Marshal.load Marshal.dump(@array)
+    coord = piece_to_play.downcase
+    row, column = change_alphabet_to_array(coord)
+    return false unless @array[row][column].is_a?(Piece)
+
+    if @array[row][column].piece_color == piece_color
+      @array[row][column].move(@array)
+      @valid_squares = @array[row][column].legal_moves
+      print_board
+      if @valid_squares.empty?
+        puts 'There are no moves to make from this square'
+        return false
+      else
+        return true
+      end
+    end
+    puts "You're playing from the wrong side of the board"
+    false
+  end
+
+  def check_for_valid_square?(piece_to_play, coord, valid_squares = @valid_squares)
+    piece_to_play = piece_to_play.downcase unless piece_to_play.is_a?(Array)
+    coord = coord.downcase unless coord.is_a?(Array)
+    source_row, source_column = change_alphabet_to_array(piece_to_play)
+    row, column = change_alphabet_to_array(coord)
+    if valid_squares[[row, column]]
+      @array[row][column] = @array[source_row][source_column]
+      @array[row][column].row = source_row
+      @array[row][column].column = source_column
+      @array[source_row][source_column] = '     '
+
+      @array[row][column].symbol.on_light_yellow
+      @array[source_row][source_column].on_light_yellow
+      print_board
+      return true
+
+    end
+    false
+  end
 end
-board = Board.new
-knight = board.array[3][3] = WhiteKnight.new(3, 3)
-board.array[5][1] = BlackQueen.new(5, 1)
-p board.array[5][1]
-board.array[5][1].move(board.array)
-p board.array[5][1].legal_moves
-p board.print_board
+# board = Board.new
+# knight = board.array[3][3] = WhiteKnight.new(3, 3)
+# board.array[5][1] = BlackQueen.new(5, 1)
+# p board.array[5][1]
+# board.array[5][1].move(board.array)
+# p board.array[5][1].legal_moves
+# p board.print_board

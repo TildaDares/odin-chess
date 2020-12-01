@@ -13,7 +13,7 @@ class Pawn < Piece
       next if piece_coord.piece_color == @piece_color
 
       unless piece_coord.piece_color == @piece_color
-        @legal_moves << [@row + dr[i], @column + dc[i]]
+        @legal_moves[[@row + dr[i], @column + dc[i]]] = [@row + dr[i], @column + dc[i]]
         next
       end
     end

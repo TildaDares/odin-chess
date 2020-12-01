@@ -1,7 +1,8 @@
 require_relative 'rook'
 require 'colorize'
 class BlackRook < Rook
-  attr_reader :symbol, :row, :column, :piece_color, :legal_moves
+  attr_reader :symbol, :piece_color, :legal_moves
+  attr_accessor :row, :column
   def initialize(row, column)
     @row = row
     @column = column
@@ -11,7 +12,7 @@ class BlackRook < Rook
 
   def move(array)
     @array = array
-    @legal_moves = []
+    @legal_moves = {}
     front_row_checker
     back_row_checker
     right_column_checker

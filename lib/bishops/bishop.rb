@@ -3,7 +3,7 @@ class Bishop < Piece
   attr_reader :legal_moves
   def move(array)
     @array = array
-    @legal_moves = []
+    @legal_moves = {}
     downwards_diagonal
     upwards_diagonal
     downwards_anti_diagonal
@@ -20,11 +20,11 @@ class Bishop < Piece
         break if piece_coord.piece_color == @piece_color
 
         unless piece_coord.piece_color == @piece_color
-          @legal_moves << [@row + i, @column + i]
+          @legal_moves[[@row + i, @column + i]] = [@row + i, @column + i]
           break
         end
       end
-      @legal_moves << [@row + i, @column + i]
+      @legal_moves[[@row + i, @column + i]] = [@row + i, @column + i]
       i += 1
     end
   end
@@ -37,11 +37,11 @@ class Bishop < Piece
         break if piece_coord.piece_color == @piece_color
 
         unless piece_coord.piece_color == @piece_color
-          @legal_moves << [@row - i, @column - i]
+          @legal_moves[[@row - i, @column - i]] = [@row - i, @column - i]
           break
         end
       end
-      @legal_moves << [@row - i, @column - i]
+      @legal_moves[[@row - i, @column - i]] = [@row - i, @column - i]
       i += 1
     end
   end
@@ -54,11 +54,11 @@ class Bishop < Piece
         break if piece_coord.piece_color == @piece_color
 
         unless piece_coord.piece_color == @piece_color
-          @legal_moves << [@row + i, @column - i]
+          @legal_moves[[@row + i, @column - i]] = [@row + i, @column - i]
           break
         end
       end
-      @legal_moves << [@row + i, @column - i]
+      @legal_moves[[@row + i, @column - i]] = [@row + i, @column - i]
       i += 1
     end
   end
@@ -71,11 +71,11 @@ class Bishop < Piece
         break if piece_coord.piece_color == @piece_color
 
         unless piece_coord.piece_color == @piece_color
-          @legal_moves << [@row - i, @column + i]
+          @legal_moves[[@row - i, @column + i]] = [@row - i, @column + i]
           break
         end
       end
-      @legal_moves << [@row - i, @column + i]
+      @legal_moves[[@row - i, @column + i]] = [@row - i, @column + i]
       i += 1
     end
   end
