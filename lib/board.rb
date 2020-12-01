@@ -13,6 +13,7 @@ require_relative 'knights/black_knight'
 require_relative 'rooks/white_rook'
 require_relative 'rooks/black_rook'
 class Board
+  attr_reader :array
   def initialize
     populate_array
   end
@@ -20,32 +21,32 @@ class Board
   def populate_array
     array = Array.new(8) { Array.new(8) { '     ' } }
     0.upto(7) do |i|
-      array[1][i] = BlackPawn.new
-      array[6][i] = WhitePawn.new
+      array[6][i] = BlackPawn.new(6, i)
+      array[1][i] = WhitePawn.new(1, i)
     end
-    array[0][0] = BlackRook.new
-    array[7][0] = WhiteRook.new
+    array[7][0] = BlackRook.new(7, 0)
+    array[0][0] = WhiteRook.new(0, 0)
 
-    array[0][1] = BlackKnight.new
-    array[7][1] = WhiteKnight.new
+    array[7][1] = BlackKnight.new(7, 1)
+    array[0][1] = WhiteKnight.new(0, 1)
 
-    array[0][2] = BlackBishop.new
-    array[7][2] = WhiteBishop.new
+    array[7][2] = BlackBishop.new(7, 2)
+    array[0][2] = WhiteBishop.new(0, 2)
 
-    array[0][3] = BlackQueen.new
-    array[7][3] = WhiteQueen.new
+    array[7][3] = BlackQueen.new(7, 3)
+    array[0][3] = WhiteQueen.new(0, 3)
 
-    array[0][4] = BlackKing.new
-    array[7][4] = WhiteKing.new
+    array[7][4] = BlackKing.new(7, 4)
+    array[0][4] = WhiteKing.new(0, 4)
 
-    array[0][5] = BlackBishop.new
-    array[7][5] = WhiteBishop.new
+    array[7][5] = BlackBishop.new(7, 5)
+    array[0][5] = WhiteBishop.new(0, 5)
 
-    array[0][6] = BlackKnight.new
-    array[7][6] = WhiteKnight.new
+    array[7][6] = BlackKnight.new(7, 6)
+    array[0][6] = WhiteKnight.new(0, 6)
 
-    array[0][7] = BlackRook.new
-    array[7][7] = WhiteRook.new
+    array[7][7] = BlackRook.new(7, 7)
+    array[0][7] = WhiteRook.new(0, 7)
 
     @array = array
   end
@@ -59,10 +60,9 @@ class Board
   end
 
   def print_board(array = @array)
-    i = 8
-    0.upto(7) do |j|
-      print "#{i} #{color_board(j, 0, array[j][0])}#{color_board(j, 1, array[j][1])}#{color_board(j, 2, array[j][2])}#{color_board(j, 3, array[j][3])}#{color_board(j, 4, array[j][4])}#{color_board(j, 5, array[j][5])}#{color_board(j, 6, array[j][6])}#{color_board(j, 7, array[j][7])}\n"
-      i -= 1
+    print "    a    b    c    d    e    f    g    h  \n"
+    7.downto(0) do |j|
+      print "#{j + 1} #{color_board(j, 0, array[j][0])}#{color_board(j, 1, array[j][1])}#{color_board(j, 2, array[j][2])}#{color_board(j, 3, array[j][3])}#{color_board(j, 4, array[j][4])}#{color_board(j, 5, array[j][5])}#{color_board(j, 6, array[j][6])}#{color_board(j, 7, array[j][7])} #{j + 1}\n"
     end
     print "    a    b    c    d    e    f    g    h  \n"
   end
@@ -85,3 +85,8 @@ class Board
     end
   end
 end
+board = Board.new
+bishop = board.array[3][3] = WhiteBishop.new(3, 3)
+bishop.move(board.array)
+p bishop.legal_moves
+p board.print_board

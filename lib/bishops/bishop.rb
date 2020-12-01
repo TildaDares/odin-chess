@@ -1,7 +1,14 @@
 require './lib/piece'
 class Bishop < Piece
   attr_reader :legal_moves
-  def move; end
+  def move(array)
+    @array = array
+    @legal_moves = []
+    downwards_diagonal
+    upwards_diagonal
+    downwards_anti_diagonal
+    upwards_anti_diagonal
+  end
 
   private
 
@@ -13,11 +20,11 @@ class Bishop < Piece
         break if piece_coord.piece_color == @piece_color
 
         unless piece_coord.piece_color == @piece_color
-          @green_square_array << [@row + i, @column + i]
+          @legal_moves << [@row + i, @column + i]
           break
         end
       end
-      @green_square_array << [@row + i, @column + i]
+      @legal_moves << [@row + i, @column + i]
       i += 1
     end
   end
@@ -30,11 +37,11 @@ class Bishop < Piece
         break if piece_coord.piece_color == @piece_color
 
         unless piece_coord.piece_color == @piece_color
-          @green_square_array << [@row - i, @column - i]
+          @legal_moves << [@row - i, @column - i]
           break
         end
       end
-      @green_square_array << [@row - i, @column - i]
+      @legal_moves << [@row - i, @column - i]
       i += 1
     end
   end
@@ -47,11 +54,11 @@ class Bishop < Piece
         break if piece_coord.piece_color == @piece_color
 
         unless piece_coord.piece_color == @piece_color
-          @green_square_array << [@row + i, @column - i]
+          @legal_moves << [@row + i, @column - i]
           break
         end
       end
-      @green_square_array << [@row + i, @column - i]
+      @legal_moves << [@row + i, @column - i]
       i += 1
     end
   end
@@ -64,11 +71,11 @@ class Bishop < Piece
         break if piece_coord.piece_color == @piece_color
 
         unless piece_coord.piece_color == @piece_color
-          @green_square_array << [@row - i, @column + i]
+          @legal_moves << [@row - i, @column + i]
           break
         end
       end
-      @green_square_array << [@row - i, @column + i]
+      @legal_moves << [@row - i, @column + i]
       i += 1
     end
   end
