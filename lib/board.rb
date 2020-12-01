@@ -72,7 +72,7 @@ class Board
     if column.even?
       piece.on_light_black
     else
-      piece.on_green
+      piece.on_white
     end
   end
 
@@ -81,12 +81,14 @@ class Board
     if column.odd?
       piece.on_light_black
     else
-      piece.on_green
+      piece.on_white
     end
   end
 end
 board = Board.new
-bishop = board.array[3][3] = WhiteBishop.new(3, 3)
-bishop.move(board.array)
-p bishop.legal_moves
+knight = board.array[3][3] = WhiteKnight.new(3, 3)
+board.array[5][1] = BlackQueen.new(5, 1)
+p board.array[5][1]
+board.array[5][1].move(board.array)
+p board.array[5][1].legal_moves
 p board.print_board
