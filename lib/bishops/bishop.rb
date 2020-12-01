@@ -8,11 +8,14 @@ class Bishop < Piece
   def downwards_diagonal
     i = 1
     while @row + i <= 7 && @column + i <= 7
-      break if (@piece & @array[@row + i][@column + i].split('')).any?
+      piece_coord = @array[@row + i][@column + i]
+      if piece_coord.is_a?(Piece)
+        break if piece_coord.piece_color == @piece_color
 
-      if (@opponent_piece & @array[@row + i][@column + i].split('')).any?
-        @green_square_array << [@row + i, @column + i]
-        break
+        unless piece_coord.piece_color == @piece_color
+          @green_square_array << [@row + i, @column + i]
+          break
+        end
       end
       @green_square_array << [@row + i, @column + i]
       i += 1
@@ -22,11 +25,14 @@ class Bishop < Piece
   def upwards_diagonal
     i = 1
     while @row - i >= 0 && @column - i >= 0
-      break if (@piece & @array[@row - i][@column - i].split('')).any?
+      piece_coord = @array[@row - i][@column - i]
+      if piece_coord.is_a?(Piece)
+        break if piece_coord.piece_color == @piece_color
 
-      if (@opponent_piece & @array[@row - i][@column - i].split('')).any?
-        @green_square_array << [@row - i, @column - i]
-        break
+        unless piece_coord.piece_color == @piece_color
+          @green_square_array << [@row - i, @column - i]
+          break
+        end
       end
       @green_square_array << [@row - i, @column - i]
       i += 1
@@ -36,11 +42,14 @@ class Bishop < Piece
   def downwards_anti_diagonal
     i = 1
     while @row + i <= 7 && @column - i >= 0
-      break if (@piece & @array[@row + i][@column - i].split('')).any?
+      piece_coord = @array[@row + i][@column - i]
+      if piece_coord.is_a?(Piece)
+        break if piece_coord.piece_color == @piece_color
 
-      if (@opponent_piece & @array[@row + i][@column - i].split('')).any?
-        @green_square_array << [@row + i, @column - i]
-        break
+        unless piece_coord.piece_color == @piece_color
+          @green_square_array << [@row + i, @column - i]
+          break
+        end
       end
       @green_square_array << [@row + i, @column - i]
       i += 1
@@ -50,11 +59,14 @@ class Bishop < Piece
   def upwards_anti_diagonal
     i = 1
     while @row - i >= 0 && @column + i <= 7
-      break if (@piece & @array[@row - i][@column + i].split('')).any?
+      piece_coord = @array[@row - i][@column + i]
+      if piece_coord.is_a?(Piece)
+        break if piece_coord.piece_color == @piece_color
 
-      if (@opponent_piece & @array[@row - i][@column + i].split('')).any?
-        @green_square_array << [@row - i, @column + i]
-        break
+        unless piece_coord.piece_color == @piece_color
+          @green_square_array << [@row - i, @column + i]
+          break
+        end
       end
       @green_square_array << [@row - i, @column + i]
       i += 1
