@@ -21,6 +21,59 @@ class Board
     populate_array
   end
 
+  def print_board(array = @array)
+    print "    a    b    c    d    e    f    g    h  \n"
+    7.downto(0) do |j|
+      print "#{j + 1} #{color_board(j, 0, array[j][0])}#{color_board(j, 1, array[j][1])}"
+      print "#{color_board(j, 2, array[j][2])}#{color_board(j, 3, array[j][3])}"
+      print "#{color_board(j, 4, array[j][4])}#{color_board(j, 5, array[j][5])}"
+      print "#{color_board(j, 6, array[j][6])}#{color_board(j, 7, array[j][7])} #{j + 1}\n"
+    end
+    print "    a    b    c    d    e    f    g    h  \n"
+  end
+
+  def check_game_board_pieces?(piece_to_play, piece_color)
+    piece_to_play = piece_to_play.split('-')
+    copied_array = Marshal.load Marshal.dump(@array)
+    source_coord = piece_to_play[0].downcase.strip
+    dest_coord = piece_to_play[1].downcase.strip
+    row, column = change_alphabet_to_array(source_coord)
+    return false unless @array[row][column].is_a?(Piece)
+
+    if @array[row][column].piece_color == piece_color
+      @array[row][column].move(@array)
+      @valid_squares = @array[row][column].legal_moves
+      if check_for_valid_square?(source_coord, dest_coord)
+        return true
+      else
+        puts 'That move is invalid'.red
+        return false
+      end
+    end
+    puts "You're playing from the wrong side of the board".red
+    false
+  end
+
+  private
+
+  def even_column_tiles(column, chess_piece)
+    piece = chess_piece.is_a?(Piece) ? chess_piece.symbol : chess_piece
+    if column.even?
+      piece.on_light_black
+    else
+      piece.on_light_white
+    end
+  end
+
+  def odd_column_tiles(column, chess_piece)
+    piece = chess_piece.is_a?(Piece) ? chess_piece.symbol : chess_piece
+    if column.odd?
+      piece.on_light_black
+    else
+      piece.on_light_white
+    end
+  end
+
   def populate_array
     array = Array.new(8) { Array.new(8) { '     ' } }
     0.upto(7) do |i|
@@ -54,7 +107,7 @@ class Board
     @array = array
   end
 
-  def color_board(row, column, chess_piece, _row_except, _col_except)
+  def color_board(row, column, chess_piece)
     if row.even?
       even_column_tiles(column, chess_piece)
     else
@@ -62,66 +115,15 @@ class Board
     end
   end
 
-  def print_board(array = @array)
-    print "    a    b    c    d    e    f    g    h  \n"
-    7.downto(0) do |j|
-      print "#{j + 1} #{color_board(j, 0, array[j][0])}#{color_board(j, 1, array[j][1])}#{color_board(j, 2, array[j][2])}#{color_board(j, 3, array[j][3])}#{color_board(j, 4, array[j][4])}#{color_board(j, 5, array[j][5])}#{color_board(j, 6, array[j][6])}#{color_board(j, 7, array[j][7])} #{j + 1}\n"
-    end
-    print "    a    b    c    d    e    f    g    h  \n"
-  end
-
-  def even_column_tiles(column, chess_piece)
-    piece = chess_piece.is_a?(Piece) ? chess_piece.symbol : chess_piece
-    if column.even?
-      piece.on_light_black
-    else
-      piece.on_light_white
-    end
-  end
-
-  def odd_column_tiles(column, chess_piece)
-    piece = chess_piece.is_a?(Piece) ? chess_piece.symbol : chess_piece
-    if column.odd?
-      piece.on_light_black
-    else
-      piece.on_light_white
-    end
-  end
-
-  def check_game_board_pieces?(piece_to_play, piece_color)
-    copied_array = Marshal.load Marshal.dump(@array)
-    coord = piece_to_play.downcase
-    row, column = change_alphabet_to_array(coord)
-    return false unless @array[row][column].is_a?(Piece)
-
-    if @array[row][column].piece_color == piece_color
-      @array[row][column].move(@array)
-      @valid_squares = @array[row][column].legal_moves
-      print_board
-      if @valid_squares.empty?
-        puts 'There are no moves to make from this square'
-        return false
-      else
-        return true
-      end
-    end
-    puts "You're playing from the wrong side of the board"
-    false
-  end
-
-  def check_for_valid_square?(piece_to_play, coord, valid_squares = @valid_squares)
-    piece_to_play = piece_to_play.downcase unless piece_to_play.is_a?(Array)
-    coord = coord.downcase unless coord.is_a?(Array)
-    source_row, source_column = change_alphabet_to_array(piece_to_play)
-    row, column = change_alphabet_to_array(coord)
+  def check_for_valid_square?(source_coord, dest_coord, valid_squares = @valid_squares)
+    source_row, source_column = change_alphabet_to_array(source_coord)
+    row, column = change_alphabet_to_array(dest_coord)
     if valid_squares[[row, column]]
       @array[row][column] = @array[source_row][source_column]
-      @array[row][column].row = source_row
-      @array[row][column].column = source_column
       @array[source_row][source_column] = '     '
+      @array[row][column].row = row
+      @array[row][column].column = column
 
-      @array[row][column].symbol.on_light_yellow
-      @array[source_row][source_column].on_light_yellow
       print_board
       return true
 
@@ -129,10 +131,3 @@ class Board
     false
   end
 end
-# board = Board.new
-# knight = board.array[3][3] = WhiteKnight.new(3, 3)
-# board.array[5][1] = BlackQueen.new(5, 1)
-# p board.array[5][1]
-# board.array[5][1].move(board.array)
-# p board.array[5][1].legal_moves
-# p board.print_board
