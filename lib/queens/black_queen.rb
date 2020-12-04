@@ -1,7 +1,7 @@
 require_relative 'queen'
 require 'colorize'
 class BlackQueen < Queen
-  attr_reader :symbol, :piece_color, :legal_moves
+  attr_reader :symbol, :piece_color, :possible_moves
   attr_accessor :row, :column
   def initialize(row, column)
     @symbol = '  ♚  '.black
@@ -12,7 +12,7 @@ class BlackQueen < Queen
 
   def move(array)
     @array = array
-    @legal_moves = {}
+    @possible_moves = {}
     queen_moves
   end
 
@@ -21,6 +21,6 @@ class BlackQueen < Queen
     bishop = BlackBishop.new(@row, @column)
     rook.move(@array)
     bishop.move(@array)
-    @legal_moves = rook.legal_moves.merge(bishop.legal_moves)
+    @possible_moves = rook.possible_moves.merge(bishop.possible_moves)
   end
 end

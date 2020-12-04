@@ -11,7 +11,7 @@ class WhiteQueen < Queen
 
   def move(array)
     @array = array
-    @legal_moves = {}
+    @possible_moves = {}
     queen_moves
   end
 
@@ -20,6 +20,6 @@ class WhiteQueen < Queen
     bishop = WhiteBishop.new(@row, @column)
     rook.move(@array)
     bishop.move(@array)
-    @legal_moves = rook.legal_moves + bishop.legal_moves
+    @possible_moves = rook.possible_moves + bishop.possible_moves
   end
 end

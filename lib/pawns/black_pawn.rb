@@ -12,7 +12,7 @@ class BlackPawn < Pawn
 
   def move(array)
     @array = array
-    @legal_moves = {}
+    @possible_moves = {}
     pawn_first_move
     capture_diagonally
   end
@@ -23,7 +23,7 @@ class BlackPawn < Pawn
     2.times do
       return if @array[add_row][@column].is_a?(Piece) || add_row.negative?
 
-      @legal_moves[[add_row, @column]] = [add_row, @column]
+      @possible_moves[[add_row, @column]] = [add_row, @column]
       return unless @row == 6
 
       add_row = add_row2

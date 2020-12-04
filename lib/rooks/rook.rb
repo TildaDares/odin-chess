@@ -6,11 +6,11 @@ class Rook < Piece
       return false if piece_coord.piece_color == @piece_color
 
       unless piece_coord.piece_color == @piece_color
-        @legal_moves[[row, @column]] = [row, @column]
+        @possible_moves[[row, @column]] = [row, @column]
         return false
       end
     end
-    @legal_moves[[row, @column]] = [row, @column]
+    @possible_moves[[row, @column]] = [row, @column]
     true
   end
 
@@ -20,11 +20,11 @@ class Rook < Piece
       return false if piece_coord.piece_color == @piece_color
 
       unless piece_coord.piece_color == @piece_color
-        @legal_moves[[@row, col]] = [@row, col]
+        @possible_moves[[@row, col]] = [@row, col]
         return false
       end
     end
-    @legal_moves[[@row, col]] = [@row, col]
+    @possible_moves[[@row, col]] = [@row, col]
     true
   end
 

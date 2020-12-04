@@ -1,6 +1,6 @@
 require './lib/piece'
 class Pawn < Piece
-  attr_reader :legal_moves
+  attr_reader :possible_moves
   def capture_diagonally
     dr = @piece_color == 'white' ? [1, 1] : [-1, -1]
     dc = [-1, +1]
@@ -13,7 +13,7 @@ class Pawn < Piece
       next if piece_coord.piece_color == @piece_color
 
       unless piece_coord.piece_color == @piece_color
-        @legal_moves[[@row + dr[i], @column + dc[i]]] = [@row + dr[i], @column + dc[i]]
+        @possible_moves[[@row + dr[i], @column + dc[i]]] = [@row + dr[i], @column + dc[i]]
         next
       end
     end

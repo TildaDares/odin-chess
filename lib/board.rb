@@ -42,7 +42,7 @@ class Board
 
     if @array[row][column].piece_color == piece_color
       @array[row][column].move(@array)
-      @valid_squares = @array[row][column].legal_moves
+      @valid_squares = @array[row][column].possible_moves
       if check_for_valid_square?(source_coord, dest_coord)
         return true
       else

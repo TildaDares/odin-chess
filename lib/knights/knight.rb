@@ -1,9 +1,9 @@
 require './lib/piece'
 class Knight < Piece
-  attr_reader :legal_moves
+  attr_reader :possible_moves
   def move(array)
     @array = array
-    @legal_moves = {}
+    @possible_moves = {}
     create_children
   end
 
@@ -21,7 +21,7 @@ class Knight < Piece
         next if @array[valid_coord[0]][valid_coord[1]].piece_color == @piece_color
       end
 
-      @legal_moves[[valid_coord[0], valid_coord[1]]] = [valid_coord[0], valid_coord[1]]
+      @possible_moves[[valid_coord[0], valid_coord[1]]] = [valid_coord[0], valid_coord[1]]
     end
   end
 end

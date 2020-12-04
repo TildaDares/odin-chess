@@ -1,8 +1,8 @@
 require './lib/piece'
 class King < Piece
-  attr_reader :legal_moves
+  attr_reader :possible_moves
   def move(array)
-    @legal_moves = {}
+    @possible_moves = {}
     @array = array
     movesets
   end
@@ -18,7 +18,7 @@ class King < Piece
       if piece_coord.is_a?(Piece)
         next if piece_coord.piece_color == @piece_color
       end
-      @legal_moves[[@row + dr[i], @column + dc[i]]] = [@row + dr[i], @column + dc[i]]
+      @possible_moves[[@row + dr[i], @column + dc[i]]] = [@row + dr[i], @column + dc[i]]
     end
   end
 end
