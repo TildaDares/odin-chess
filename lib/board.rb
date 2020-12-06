@@ -19,18 +19,15 @@ class Board
   attr_reader :array
   def initialize
     populate_array
+    binding.pry
   end
 
   def print_board(piece_color)
     print "    a    b    c    d    e    f    g    h  \n"
     if piece_color == 'white'
-      7.downto(0) do |row|
-        print_symbols(row)
-      end
+      7.downto(0) { |row| print_symbols(row) }
     else
-      0.upto(7) do |row|
-        print_symbols(row)
-      end
+      0.upto(7) { |row| print_symbols(row) }
     end
     print "    a    b    c    d    e    f    g    h  \n"
   end
@@ -44,13 +41,11 @@ class Board
 
     if @array[row][column].piece_color == piece_color
       possible_moves = @array[row][column].move(@array)
-      @valid_squares = check_for_legal_moves(possible_moves, @array, piece_color, source_coord)
-      if check_for_valid_square?(source_coord, dest_coord)
-        return true
-      else
-        puts 'That move is invalid'.red
-        return false
-      end
+      @valid_squares = check_for_legal_moves(possible_moves, piece_color, source_coord)
+      return true if check_for_valid_square?(source_coord, dest_coord)
+
+      puts 'That move is invalid'.red
+      return false
     end
     puts "You're playing from the wrong side of the board".red
     false
@@ -71,14 +66,22 @@ class Board
     false
   end
 
+  def checkmate?(piece_color)
+    check?(piece_color) && no_moves_left?(piece_color)
+  end
+
+  def stalemate?(piece_color)
+    !check?(piece_color) && no_moves_left?(piece_color)
+  end
+
   private
 
-  def check_for_legal_moves(possible_moves, array, piece_color, coord)
+  def check_for_legal_moves(possible_moves, piece_color, coord)
     row, column = change_alphabet_to_array(coord)
     dup_possible_moves = Marshal.load Marshal.dump(possible_moves)
 
     dup_possible_moves.each do |moves_key, _moves_value|
-      dup_array = Marshal.load Marshal.dump(array)
+      dup_array = Marshal.load Marshal.dump(@array)
       dup_array[moves_key[0]][moves_key[1]] = dup_array[row][column].class.new(moves_key[0], moves_key[1])
       dup_array[row][column] = '     '
       possible_moves.delete(moves_key) if check?(piece_color, dup_array)
@@ -92,6 +95,21 @@ class Board
     else
       [@black_king.row, @black_king.column]
     end
+  end
+
+  def no_moves_left?(piece_color)
+    @array.each_with_index do |subarray, row|
+      subarray.each_with_index do |sub_sub_array, column|
+        next unless sub_sub_array.is_a?(Piece)
+
+        next unless sub_sub_array.piece_color == piece_color
+
+        possible_moves = sub_sub_array.move(@array)
+        legal_moves = check_for_legal_moves(possible_moves, piece_color, [row, column])
+        return false unless legal_moves.empty?
+      end
+    end
+    true
   end
 
   def even_column_tiles(column, chess_piece)
@@ -113,36 +131,34 @@ class Board
   end
 
   def populate_array
-    array = Array.new(8) { Array.new(8) { '     ' } }
+    @array = Array.new(8) { Array.new(8) { '     ' } }
     0.upto(7) do |i|
-      array[6][i] = BlackPawn.new(6, i)
-      array[1][i] = WhitePawn.new(1, i)
+      @array[6][i] = BlackPawn.new(6, i)
+      @array[1][i] = WhitePawn.new(1, i)
     end
-    array[7][0] = BlackRook.new(7, 0)
-    array[0][0] = WhiteRook.new(0, 0)
+    @array[7][0] = BlackRook.new(7, 0)
+    @array[0][0] = WhiteRook.new(0, 0)
 
-    array[7][1] = BlackKnight.new(7, 1)
-    array[0][1] = WhiteKnight.new(0, 1)
+    @array[7][1] = BlackKnight.new(7, 1)
+    @array[0][1] = WhiteKnight.new(0, 1)
 
-    array[7][2] = BlackBishop.new(7, 2)
-    array[0][2] = WhiteBishop.new(0, 2)
+    @array[7][2] = BlackBishop.new(7, 2)
+    @array[0][2] = WhiteBishop.new(0, 2)
 
-    array[7][3] = BlackQueen.new(7, 3)
-    array[0][3] = WhiteQueen.new(0, 3)
+    @array[7][3] = BlackQueen.new(7, 3)
+    @array[0][3] = WhiteQueen.new(0, 3)
 
     @black_king = array[7][4] = BlackKing.new(7, 4)
     @white_king = array[0][4] = WhiteKing.new(0, 4)
 
-    array[7][5] = BlackBishop.new(7, 5)
-    array[0][5] = WhiteBishop.new(0, 5)
+    @array[7][5] = BlackBishop.new(7, 5)
+    @array[0][5] = WhiteBishop.new(0, 5)
 
-    array[7][6] = BlackKnight.new(7, 6)
-    array[0][6] = WhiteKnight.new(0, 6)
+    @array[7][6] = BlackKnight.new(7, 6)
+    @array[0][6] = WhiteKnight.new(0, 6)
 
-    array[7][7] = BlackRook.new(7, 7)
-    array[0][7] = WhiteRook.new(0, 7)
-
-    @array = array
+    @array[7][7] = BlackRook.new(7, 7)
+    @array[0][7] = WhiteRook.new(0, 7)
   end
 
   def color_board(row, column, chess_piece)
@@ -153,23 +169,18 @@ class Board
     end
   end
 
-  def check_for_valid_square?(source_coord, dest_coord, valid_squares = @valid_squares)
+  def check_for_valid_square?(source_coord, dest_coord)
     source_row, source_column = change_alphabet_to_array(source_coord)
     row, column = change_alphabet_to_array(dest_coord)
-    if valid_squares[[row, column]]
+    if @valid_squares[[row, column]]
       @array[row][column] = @array[source_row][source_column]
       @array[source_row][source_column] = '     '
       @array[row][column].row = row
       @array[row][column].column = column
 
       return true
-
     end
     false
-  end
-
-  def opp_piece_color(piece_color)
-    piece_color == 'white' ? 'black' : 'white'
   end
 
   def print_symbols(row)
