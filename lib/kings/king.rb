@@ -1,10 +1,10 @@
 require './lib/piece'
 class King < Piece
-  attr_reader :possible_moves
   def move(array)
     @possible_moves = {}
     @array = array
     movesets
+    @possible_moves
   end
 
   def movesets

@@ -3,7 +3,7 @@ class WhiteQueen < Queen
   attr_reader :symbol, :piece_color
   attr_accessor :row, :column
   def initialize(row, column)
-    @symbol = '  ♔  '
+    @symbol = '  ♕  '
     @row = row
     @column = column
     @piece_color = 'white'
@@ -13,13 +13,12 @@ class WhiteQueen < Queen
     @array = array
     @possible_moves = {}
     queen_moves
+    @possible_moves
   end
 
   def queen_moves
     rook = WhiteRook.new(@row, @column)
     bishop = WhiteBishop.new(@row, @column)
-    rook.move(@array)
-    bishop.move(@array)
-    @possible_moves = rook.possible_moves + bishop.possible_moves
+    @possible_moves = rook.move(@array).merge(bishop.move(@array))
   end
 end

@@ -16,16 +16,9 @@ class Player
   end
 
   def move
+    puts "#{@name} is in CHECK!".red if @@board.check?(@piece)
     @@board.print_board
-    puts "#{@name} what piece would you like to play? ".green + directions
-    piece_to_play = gets.chomp
-    verify_user_input(piece_to_play)
-
-    until @@board.check_game_board_pieces?(piece_to_play, @piece)
-      puts 'Enter a valid move'.green
-      piece_to_play = gets.chomp
-      verify_user_input(piece_to_play)
-    end
+    piece_to_play = move_user_piece
     piece_to_play = piece_to_play.split('-')
     puts "#{@name} moved her piece from #{piece_to_play[0].strip} to #{piece_to_play[1].strip}".yellow
     true
@@ -33,11 +26,18 @@ class Player
 
   private
 
-  def verify_user_input(input)
-    while input.empty? || !(/\A[a-h][1-8]\s?\-\s?[a-h][1-8]\Z/i =~ input)
-      puts 'Enter a valid piece'.green
-      input = gets.chomp
+  def move_user_piece
+    piece_to_play = nil
+    loop do
+      puts "#{@name} what piece would you like to play? ".green + directions
+      piece_to_play = gets.chomp
+      while piece_to_play.empty? || !(/\A[a-h][1-8]\s?\-\s?[a-h][1-8]\Z/i =~ piece_to_play)
+        puts 'Enter a valid piece'.green
+        piece_to_play = gets.chomp
+      end
+      break if @@board.check_game_board_pieces?(piece_to_play, @piece)
     end
+    piece_to_play
   end
 
   def directions

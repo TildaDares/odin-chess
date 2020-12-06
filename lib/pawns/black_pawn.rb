@@ -15,6 +15,7 @@ class BlackPawn < Pawn
     @possible_moves = {}
     pawn_first_move
     capture_diagonally
+    @possible_moves
   end
 
   def pawn_first_move

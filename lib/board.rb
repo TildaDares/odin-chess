@@ -34,15 +34,14 @@ class Board
 
   def check_game_board_pieces?(piece_to_play, piece_color)
     piece_to_play = piece_to_play.split('-')
-    copied_array = Marshal.load Marshal.dump(@array)
     source_coord = piece_to_play[0].downcase.strip
     dest_coord = piece_to_play[1].downcase.strip
     row, column = change_alphabet_to_array(source_coord)
     return false unless @array[row][column].is_a?(Piece)
 
     if @array[row][column].piece_color == piece_color
-      @array[row][column].move(@array)
-      @valid_squares = @array[row][column].possible_moves
+      possible_moves = @array[row][column].move(@array)
+      @valid_squares = check_for_legal_moves(possible_moves, @array, piece_color, source_coord)
       if check_for_valid_square?(source_coord, dest_coord)
         return true
       else
@@ -54,14 +53,50 @@ class Board
     false
   end
 
+  def check?(piece_color, array = @array)
+    king_row, king_col = look_for_king(piece_color)
+    array.each_with_index do |subarray, _row|
+      subarray.each_with_index do |sub_sub_array, _column|
+        next unless sub_sub_array.is_a?(Piece)
+
+        next if sub_sub_array.piece_color == piece_color
+
+        possible_moves = sub_sub_array.move(array)
+        return true if possible_moves[[king_row, king_col]]
+      end
+    end
+    false
+  end
+
   private
+
+  def check_for_legal_moves(possible_moves, array, piece_color, coord)
+    row, column = change_alphabet_to_array(coord)
+    dup_possible_moves = Marshal.load Marshal.dump(possible_moves)
+
+    dup_possible_moves.each do |moves_key, _moves_value|
+      dup_array = Marshal.load Marshal.dump(array)
+      dup_array[moves_key[0]][moves_key[1]] = dup_array[row][column].class.new(moves_key[0], moves_key[1])
+      dup_array[row][column] = '     '
+      possible_moves.delete(moves_key) if check?(piece_color, dup_array)
+    end
+    possible_moves
+  end
+
+  def look_for_king(piece_color)
+    if piece_color == 'white'
+      [@white_king.row, @white_king.column]
+    else
+      [@black_king.row, @black_king.column]
+    end
+  end
 
   def even_column_tiles(column, chess_piece)
     piece = chess_piece.is_a?(Piece) ? chess_piece.symbol : chess_piece
     if column.even?
       piece.on_light_black
     else
-      piece.on_light_white
+      piece.on_green
     end
   end
 
@@ -70,7 +105,7 @@ class Board
     if column.odd?
       piece.on_light_black
     else
-      piece.on_light_white
+      piece.on_green
     end
   end
 
@@ -92,8 +127,8 @@ class Board
     array[7][3] = BlackQueen.new(7, 3)
     array[0][3] = WhiteQueen.new(0, 3)
 
-    array[7][4] = BlackKing.new(7, 4)
-    array[0][4] = WhiteKing.new(0, 4)
+    @black_king = array[7][4] = BlackKing.new(7, 4)
+    @white_king = array[0][4] = WhiteKing.new(0, 4)
 
     array[7][5] = BlackBishop.new(7, 5)
     array[0][5] = WhiteBishop.new(0, 5)
@@ -124,10 +159,13 @@ class Board
       @array[row][column].row = row
       @array[row][column].column = column
 
-      print_board
       return true
 
     end
     false
+  end
+
+  def opp_piece_color(piece_color)
+    piece_color == 'white' ? 'black' : 'white'
   end
 end

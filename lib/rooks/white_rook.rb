@@ -1,6 +1,6 @@
 require_relative 'rook'
 class WhiteRook < Rook
-  attr_reader :symbol, :piece_color, :possible_moves
+  attr_reader :symbol, :piece_color
   attr_accessor :row, :column
   def initialize(row, column)
     @symbol = '  ♖  '
@@ -16,17 +16,18 @@ class WhiteRook < Rook
     back_row_checker
     right_column_checker
     left_column_checker
+    @possible_moves
   end
 
   def front_row_checker
-    (@row + 1).upto(0) do |row|
-      break unless row_checker(row)
+    (@row + 1).upto(7) do |row|
+      break unless movesets(row, @column)
     end
   end
 
   def back_row_checker
-    (@row - 1).downto(7) do |row|
-      break unless row_checker(row)
+    (@row - 1).downto(0) do |row|
+      break unless movesets(row, @column)
     end
   end
 end

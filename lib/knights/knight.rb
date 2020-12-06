@@ -1,10 +1,10 @@
 require './lib/piece'
 class Knight < Piece
-  attr_reader :possible_moves
   def move(array)
     @array = array
     @possible_moves = {}
     create_children
+    @possible_moves
   end
 
   def create_children

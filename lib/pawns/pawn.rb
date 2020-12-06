@@ -1,6 +1,5 @@
 require './lib/piece'
 class Pawn < Piece
-  attr_reader :possible_moves
   def capture_diagonally
     dr = @piece_color == 'white' ? [1, 1] : [-1, -1]
     dc = [-1, +1]

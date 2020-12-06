@@ -1,82 +1,35 @@
 require './lib/piece'
 class Bishop < Piece
-  attr_reader :possible_moves
   def move(array)
     @array = array
     @possible_moves = {}
-    downwards_diagonal
-    upwards_diagonal
-    downwards_anti_diagonal
-    upwards_anti_diagonal
+    diagonals
+
+    @possible_moves
   end
 
   private
 
-  def downwards_diagonal
-    i = 1
-    while @row + i <= 7 && @column + i <= 7
-      piece_coord = @array[@row + i][@column + i]
-      if piece_coord.is_a?(Piece)
-        break if piece_coord.piece_color == @piece_color
+    def diagonals
+      row_idx = [+1, -1, +1, -1]
+      col_idx = [+1, -1, -1, +1]
+      4.times do |step|
+        i = row_idx[step]
+        j = col_idx[step]
+        while (@row + i).between?(0, 7) && (@column + j).between?(0, 7)
+          piece_coord = @array[@row + i][@column + j]
+          if piece_coord.is_a?(Piece)
+            break if piece_coord.piece_color == @piece_color
 
-        unless piece_coord.piece_color == @piece_color
-          @possible_moves[[@row + i, @column + i]] = [@row + i, @column + i]
-          break
+            unless piece_coord.piece_color == @piece_color
+              @possible_moves[[@row + i, @column + j]] = [@row + i, @column + j]
+              break
+            end
+          end
+          @possible_moves[[@row + i, @column + j]] = [@row + i, @column + j]
+          i = row_idx[step] * (i.abs + 1)
+          j = col_idx[step] * (j.abs + 1)
         end
       end
-      @possible_moves[[@row + i, @column + i]] = [@row + i, @column + i]
-      i += 1
     end
-  end
-
-  def upwards_diagonal
-    i = 1
-    while @row - i >= 0 && @column - i >= 0
-      piece_coord = @array[@row - i][@column - i]
-      if piece_coord.is_a?(Piece)
-        break if piece_coord.piece_color == @piece_color
-
-        unless piece_coord.piece_color == @piece_color
-          @possible_moves[[@row - i, @column - i]] = [@row - i, @column - i]
-          break
-        end
-      end
-      @possible_moves[[@row - i, @column - i]] = [@row - i, @column - i]
-      i += 1
-    end
-  end
-
-  def downwards_anti_diagonal
-    i = 1
-    while @row + i <= 7 && @column - i >= 0
-      piece_coord = @array[@row + i][@column - i]
-      if piece_coord.is_a?(Piece)
-        break if piece_coord.piece_color == @piece_color
-
-        unless piece_coord.piece_color == @piece_color
-          @possible_moves[[@row + i, @column - i]] = [@row + i, @column - i]
-          break
-        end
-      end
-      @possible_moves[[@row + i, @column - i]] = [@row + i, @column - i]
-      i += 1
-    end
-  end
-
-  def upwards_anti_diagonal
-    i = 1
-    while @row - i >= 0 && @column + i <= 7
-      piece_coord = @array[@row - i][@column + i]
-      if piece_coord.is_a?(Piece)
-        break if piece_coord.piece_color == @piece_color
-
-        unless piece_coord.piece_color == @piece_color
-          @possible_moves[[@row - i, @column + i]] = [@row - i, @column + i]
-          break
-        end
-      end
-      @possible_moves[[@row - i, @column + i]] = [@row - i, @column + i]
-      i += 1
-    end
-  end
 end
