@@ -21,13 +21,16 @@ class Board
     populate_array
   end
 
-  def print_board(array = @array)
+  def print_board(piece_color)
     print "    a    b    c    d    e    f    g    h  \n"
-    7.downto(0) do |j|
-      print "#{j + 1} #{color_board(j, 0, array[j][0])}#{color_board(j, 1, array[j][1])}"
-      print "#{color_board(j, 2, array[j][2])}#{color_board(j, 3, array[j][3])}"
-      print "#{color_board(j, 4, array[j][4])}#{color_board(j, 5, array[j][5])}"
-      print "#{color_board(j, 6, array[j][6])}#{color_board(j, 7, array[j][7])} #{j + 1}\n"
+    if piece_color == 'white'
+      7.downto(0) do |row|
+        print_symbols(row)
+      end
+    else
+      0.upto(7) do |row|
+        print_symbols(row)
+      end
     end
     print "    a    b    c    d    e    f    g    h  \n"
   end
@@ -167,5 +170,12 @@ class Board
 
   def opp_piece_color(piece_color)
     piece_color == 'white' ? 'black' : 'white'
+  end
+
+  def print_symbols(row)
+    print "#{row + 1} #{color_board(row, 0, @array[row][0])}#{color_board(row, 1, @array[row][1])}"
+    print "#{color_board(row, 2, @array[row][2])}#{color_board(row, 3, @array[row][3])}"
+    print "#{color_board(row, 4, @array[row][4])}#{color_board(row, 5, @array[row][5])}"
+    print "#{color_board(row, 6, @array[row][6])}#{color_board(row, 7, @array[row][7])} #{row + 1}\n"
   end
 end

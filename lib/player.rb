@@ -17,7 +17,7 @@ class Player
 
   def move
     puts "#{@name} is in CHECK!".red if @@board.check?(@piece)
-    @@board.print_board
+    @@board.print_board(@piece)
     piece_to_play = move_user_piece
     piece_to_play = piece_to_play.split('-')
     puts "#{@name} moved her piece from #{piece_to_play[0].strip} to #{piece_to_play[1].strip}".yellow
