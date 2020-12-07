@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'colorize'
-require_relative 'piece'
+require_relative 'populate_chess_array'
 require_relative 'convert_chess_notations'
 require_relative 'bishops/white_bishop'
 require_relative 'bishops/black_bishop'
@@ -18,10 +18,10 @@ require_relative 'rooks/black_rook'
 require 'pry'
 class Board
   include ConvertChessNotations
+  include PopulateChessArray
   attr_reader :array
   def initialize
     populate_array
-    binding.pry
   end
 
   def print_board(piece_color)
@@ -54,7 +54,9 @@ class Board
   end
 
   def check?(piece_color, array = @array)
-    king_row, king_col = look_for_king(piece_color)
+    king = look_for_king(piece_color)
+    king_row = king.row
+    king_col = king.column
     array.each_with_index do |subarray, _row|
       subarray.each_with_index do |sub_sub_array, _column|
         next unless sub_sub_array.is_a?(Piece)
@@ -81,22 +83,27 @@ class Board
   def check_for_legal_moves(possible_moves, piece_color, coord)
     row, column = change_alphabet_to_array(coord)
     dup_possible_moves = Marshal.load Marshal.dump(possible_moves)
+    king = look_for_king(piece_color)
+    dup_king = Marshal.load Marshal.dump(king)
 
     dup_possible_moves.each do |moves_key, _moves_value|
       dup_array = Marshal.load Marshal.dump(@array)
-      dup_array[moves_key[0]][moves_key[1]] = dup_array[row][column].class.new(moves_key[0], moves_key[1])
+      chess_piece = dup_array[moves_key[0]][moves_key[1]] = dup_array[row][column].class.new(moves_key[0], moves_key[1])
+      change_king_coord(moves_key[0], moves_key[1], king) if chess_piece.is_a?(king.class)
       dup_array[row][column] = '     '
       possible_moves.delete(moves_key) if check?(piece_color, dup_array)
     end
+    king = @array[dup_king.row][dup_king.column]
     possible_moves
   end
 
+  def change_king_coord(row, column, king)
+    king.row = row
+    king.column = column
+  end
+
   def look_for_king(piece_color)
-    if piece_color == 'white'
-      [@white_king.row, @white_king.column]
-    else
-      [@black_king.row, @black_king.column]
-    end
+    piece_color == 'white' ? @white_king : @black_king
   end
 
   def no_moves_left?(piece_color)
@@ -107,42 +114,11 @@ class Board
         next unless sub_sub_array.piece_color == piece_color
 
         possible_moves = sub_sub_array.move(@array)
-        legal_moves = check_for_legal_moves(possible_moves, piece_color, [row, column])
-        return false unless legal_moves.empty?
+        @legal_moves = check_for_legal_moves(possible_moves, piece_color, [row, column])
+        return false unless @legal_moves.empty?
       end
     end
     true
-  end
-
-  def populate_array
-    @array = Array.new(8) { Array.new(8) { '     ' } }
-    0.upto(7) do |i|
-      @array[6][i] = BlackPawn.new(6, i)
-      @array[1][i] = WhitePawn.new(1, i)
-    end
-    @array[7][0] = BlackRook.new(7, 0)
-    @array[0][0] = WhiteRook.new(0, 0)
-
-    @array[7][1] = BlackKnight.new(7, 1)
-    @array[0][1] = WhiteKnight.new(0, 1)
-
-    @array[7][2] = BlackBishop.new(7, 2)
-    @array[0][2] = WhiteBishop.new(0, 2)
-
-    @array[7][3] = BlackQueen.new(7, 3)
-    @array[0][3] = WhiteQueen.new(0, 3)
-
-    @black_king = array[7][4] = BlackKing.new(7, 4)
-    @white_king = array[0][4] = WhiteKing.new(0, 4)
-
-    @array[7][5] = BlackBishop.new(7, 5)
-    @array[0][5] = WhiteBishop.new(0, 5)
-
-    @array[7][6] = BlackKnight.new(7, 6)
-    @array[0][6] = WhiteKnight.new(0, 6)
-
-    @array[7][7] = BlackRook.new(7, 7)
-    @array[0][7] = WhiteRook.new(0, 7)
   end
 
   def print_symbols(row)
