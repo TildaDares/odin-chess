@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require './lib/piece'
 class Bishop < Piece
   def move(array)

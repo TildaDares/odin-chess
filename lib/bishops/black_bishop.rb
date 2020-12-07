@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative 'bishop'
 require 'colorize'
 class BlackBishop < Bishop

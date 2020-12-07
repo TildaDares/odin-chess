@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'rook'
 class WhiteRook < Rook
   attr_reader :symbol, :piece_color

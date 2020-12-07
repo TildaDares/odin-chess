@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'pawn'
 class WhitePawn < Pawn
   attr_reader :symbol, :piece_color

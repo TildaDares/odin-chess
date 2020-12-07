@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module ConvertChessNotations
   def change_number_to_array(source)
     row = case source
@@ -10,6 +11,7 @@ module ConvertChessNotations
           when '4'
             3
           when '5'
+
             4
           when '6'
             5

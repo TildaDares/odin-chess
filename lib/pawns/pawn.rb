@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require './lib/piece'
 class Pawn < Piece
   def capture_diagonally

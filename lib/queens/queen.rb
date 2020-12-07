@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require './lib/piece'
 require './lib/rooks/rook'
 require './lib/bishops/bishop'

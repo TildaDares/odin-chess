@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative 'king'
 class WhiteKing < King
   attr_reader :symbol, :piece_color

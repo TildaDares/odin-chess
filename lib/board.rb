@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'colorize'
 require_relative 'piece'
 require_relative 'convert_chess_notations'
@@ -112,24 +114,6 @@ class Board
     true
   end
 
-  def even_column_tiles(column, chess_piece)
-    piece = chess_piece.is_a?(Piece) ? chess_piece.symbol : chess_piece
-    if column.even?
-      piece.on_light_black
-    else
-      piece.on_green
-    end
-  end
-
-  def odd_column_tiles(column, chess_piece)
-    piece = chess_piece.is_a?(Piece) ? chess_piece.symbol : chess_piece
-    if column.odd?
-      piece.on_light_black
-    else
-      piece.on_green
-    end
-  end
-
   def populate_array
     @array = Array.new(8) { Array.new(8) { '     ' } }
     0.upto(7) do |i|
@@ -161,6 +145,31 @@ class Board
     @array[0][7] = WhiteRook.new(0, 7)
   end
 
+  def print_symbols(row)
+    print "#{row + 1} #{color_board(row, 0, @array[row][0])}#{color_board(row, 1, @array[row][1])}"
+    print "#{color_board(row, 2, @array[row][2])}#{color_board(row, 3, @array[row][3])}"
+    print "#{color_board(row, 4, @array[row][4])}#{color_board(row, 5, @array[row][5])}"
+    print "#{color_board(row, 6, @array[row][6])}#{color_board(row, 7, @array[row][7])} #{row + 1}\n"
+  end
+
+  def even_column_tiles(column, chess_piece)
+    piece = chess_piece.is_a?(Piece) ? chess_piece.symbol : chess_piece
+    if column.even?
+      piece.on_light_black
+    else
+      piece.on_green
+    end
+  end
+
+  def odd_column_tiles(column, chess_piece)
+    piece = chess_piece.is_a?(Piece) ? chess_piece.symbol : chess_piece
+    if column.odd?
+      piece.on_light_black
+    else
+      piece.on_green
+    end
+  end
+
   def color_board(row, column, chess_piece)
     if row.even?
       even_column_tiles(column, chess_piece)
@@ -181,12 +190,5 @@ class Board
       return true
     end
     false
-  end
-
-  def print_symbols(row)
-    print "#{row + 1} #{color_board(row, 0, @array[row][0])}#{color_board(row, 1, @array[row][1])}"
-    print "#{color_board(row, 2, @array[row][2])}#{color_board(row, 3, @array[row][3])}"
-    print "#{color_board(row, 4, @array[row][4])}#{color_board(row, 5, @array[row][5])}"
-    print "#{color_board(row, 6, @array[row][6])}#{color_board(row, 7, @array[row][7])} #{row + 1}\n"
   end
 end
