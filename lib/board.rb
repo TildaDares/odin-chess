@@ -54,7 +54,7 @@ class Board
   end
 
   def check?(piece_color, array = @array)
-    king = look_for_king(piece_color)
+    king = get_king(piece_color)
     king_row = king.row
     king_col = king.column
     array.each_with_index do |subarray, _row|
@@ -83,7 +83,7 @@ class Board
   def check_for_legal_moves(possible_moves, piece_color, coord)
     row, column = change_alphabet_to_array(coord)
     dup_possible_moves = Marshal.load Marshal.dump(possible_moves)
-    king = look_for_king(piece_color)
+    king = get_king(piece_color)
     dup_king = Marshal.load Marshal.dump(king)
 
     dup_possible_moves.each do |moves_key, _moves_value|
@@ -93,7 +93,7 @@ class Board
       dup_array[row][column] = '     '
       possible_moves.delete(moves_key) if check?(piece_color, dup_array)
     end
-    king = @array[dup_king.row][dup_king.column]
+    change_king_coord(dup_king.row, dup_king.column, king)
     possible_moves
   end
 
@@ -102,7 +102,7 @@ class Board
     king.column = column
   end
 
-  def look_for_king(piece_color)
+  def get_king(piece_color)
     piece_color == 'white' ? @white_king : @black_king
   end
 

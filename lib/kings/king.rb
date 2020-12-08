@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require './lib/piece'
 class King < Piece
   def move(array)
@@ -7,6 +8,8 @@ class King < Piece
     movesets
     @possible_moves
   end
+
+  private
 
   def movesets
     dr = [-1, -1, -1, 0, 0, +1, +1, +1]

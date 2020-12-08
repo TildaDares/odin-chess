@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative 'pawn'
 
 class BlackPawn < Pawn
@@ -18,6 +19,8 @@ class BlackPawn < Pawn
     capture_diagonally
     @possible_moves
   end
+
+  private
 
   def pawn_first_move
     add_row = @row - 1

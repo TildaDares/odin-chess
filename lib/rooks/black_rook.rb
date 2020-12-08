@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative 'rook'
 require 'colorize'
 class BlackRook < Rook
@@ -20,6 +21,8 @@ class BlackRook < Rook
     left_column_checker
     @possible_moves
   end
+
+  private
 
   def front_row_checker
     (@row - 1).downto(0) do |row|

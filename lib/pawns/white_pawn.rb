@@ -19,6 +19,8 @@ class WhitePawn < Pawn
     @possible_moves
   end
 
+  private
+
   def pawn_first_move
     add_row = @row + 1
     add_row2 = @row + 2

@@ -1,6 +1,9 @@
 # frozen_string_literal: true
+
 require './lib/piece'
 class Rook < Piece
+  private
+
   def movesets(row, col)
     piece_coord = @array[row][col]
     if piece_coord.is_a?(Piece)

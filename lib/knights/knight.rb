@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require './lib/piece'
 class Knight < Piece
   def move(array)
@@ -7,6 +8,8 @@ class Knight < Piece
     create_children
     @possible_moves
   end
+
+  private
 
   def create_children
     chess_row = [-1, 2, 2, 1, -1, -2, -2, 1]

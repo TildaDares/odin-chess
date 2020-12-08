@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative 'queen'
 class WhiteQueen < Queen
   attr_reader :symbol, :piece_color
@@ -16,6 +17,8 @@ class WhiteQueen < Queen
     queen_moves
     @possible_moves
   end
+
+  private
 
   def queen_moves
     rook = WhiteRook.new(@row, @column)

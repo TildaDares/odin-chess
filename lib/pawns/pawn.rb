@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 require './lib/piece'
 class Pawn < Piece
+  private
+  
   def capture_diagonally
     dr = @piece_color == 'white' ? [1, 1] : [-1, -1]
     dc = [-1, +1]

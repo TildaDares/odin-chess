@@ -6,7 +6,6 @@ class Bishop < Piece
     @array = array
     @possible_moves = {}
     diagonals
-
     @possible_moves
   end
 

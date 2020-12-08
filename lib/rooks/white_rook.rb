@@ -21,6 +21,8 @@ class WhiteRook < Rook
     @possible_moves
   end
 
+  private
+
   def front_row_checker
     (@row + 1).upto(7) do |row|
       break unless movesets(row, @column)

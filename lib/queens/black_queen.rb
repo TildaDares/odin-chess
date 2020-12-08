@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative 'queen'
 require 'colorize'
 class BlackQueen < Queen
@@ -17,6 +18,8 @@ class BlackQueen < Queen
     queen_moves
     @possible_moves
   end
+
+  private
 
   def queen_moves
     rook = BlackRook.new(@row, @column)
